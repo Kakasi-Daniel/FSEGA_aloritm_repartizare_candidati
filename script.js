@@ -1,4 +1,56 @@
-const candidati = [
+const repartizareInit = (candidati, specializari) => {
+  const denumiriSpecializari = Object.keys(specializari);
+
+  candidati.forEach((candidat) => {
+    denumiriSpecializari.forEach((specialitate) => {
+      //Pozitiile candidat[4] pana la candidat[candidat.length-1] reprezinta optiunile alese
+      for (let i = 4; i < candidat.length; i++) {
+        if (
+          specializari[specialitate].cod === candidat[i] &&
+          specializari[specialitate].locuri >
+            specializari[specialitate].admisi.length
+        ) {
+          specializari[specialitate].admisi.push(candidat);
+          break;
+        }
+      }
+    });
+  });
+
+  for (let i = 0; i < denumiriSpecializari.length; i++) {
+    let elem = document.createElement('div');
+    let admisi = specializari[denumiriSpecializari[i]].admisi;
+    let note = [];
+    for (let i = 0; i < admisi.length; i++) {
+      note.push(admisi[i][1]);
+    }
+    let noteString = '';
+    for (let i = 0; i < note.length; i++) {
+      noteString += `<div class="cell" >${
+        i + 1
+      }.&nbsp; <span class="nota" >${note[i].toFixed(2)}</span></div>`;
+    }
+    elem.innerHTML = `<h1>${denumiriSpecializari[i].replace(
+      /_/g,
+      ' '
+    )}</h1>${noteString}`;
+    document.querySelector('.rez').appendChild(elem);
+  }
+};
+
+const ordoneazaCandidatii = (listaCandidati) => {
+  listaCandidati.sort((a, b) => {
+    return (
+      parseFloat(b[1].replace(/,/g, '.')) - parseFloat(a[1].replace(/,/g, '.'))
+    );
+  });
+};
+
+//candidatii au fost ordonati printr-un algoritm separat
+//lista cu candidatii neordonati si optiuniile acestora se gaseste la link-ul de jos
+//https://econ.ubbcluj.ro/admitere/liste/FSEGA%20Lista%20inscrisi%20admitere%20LICENTA%20iulie%202021.pdf
+
+const listaCandidati = [
   ['899', 10, '9,50', '9,25', '92_IE_ID', '94_MK_ID', '93_MG.Ro_ID'],
   ['1009', 10, '9,35', '9,60', '08_MG.Ro_ZI_B', '18_MG.Ro_ZI_T'],
   [
@@ -28744,7 +28796,7 @@ const candidati = [
   ['4438', 5.25, '5,00', '5,00', '86_CIG.Res_Etn'],
 ];
 
-const repartizare = {
+const listaSpecializari = {
   Economia_comerţului_turismului_şi_serviciilor_Ro_cu_frecvență_BUGET: {
     cod: '02_ECTS.Ro_ZI_B',
     locuri: 37,
@@ -29041,35 +29093,4 @@ const repartizare = {
   },
 };
 
-const repartKeys = Object.keys(repartizare);
-
-candidati.forEach((cand) => {
-  repartKeys.forEach((e) => {
-    for (let i = 4; i < cand.length; i++) {
-      if (
-        repartizare[e].cod === cand[i] &&
-        repartizare[e].locuri > repartizare[e].admisi.length
-      ) {
-        repartizare[e].admisi.push(cand);
-        break;
-      }
-    }
-  });
-});
-
-for (let i = 0; i < repartKeys.length; i++) {
-  let elem = document.createElement('div');
-  let admisi = repartizare[repartKeys[i]].admisi;
-  let note = [];
-  for (let j = 0; j < admisi.length; j++) {
-    note.push(admisi[j][1]);
-  }
-  let noteString = '';
-  for (let x = 0; x < note.length; x++) {
-    noteString += `<div class="cell" >${
-      x + 1
-    }.&nbsp; <span class="nota" >${note[x].toFixed(2)}</span></div>`;
-  }
-  elem.innerHTML = `<h1>${repartKeys[i].replace(/_/g," ")}</h1>${noteString}`;
-  document.querySelector('.rez').appendChild(elem);
-}
+repartizareInit(listaCandidati, listaSpecializari);
