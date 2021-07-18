@@ -1,21 +1,46 @@
+document.querySelector('.cautaNrLegitim').oninput = (e) => {
+  document.querySelectorAll('.nrLeg').forEach((i) => {
+    if (parseInt(i.textContent) === parseInt(e.target.value)) {
+      window.scroll({
+        top: i.offsetTop - window.innerHeight / 2,
+        behavior: 'smooth',
+      });
+      i.parentElement.style.border = `1px #fff solid`;
+      function checkIfChanged() {
+        if (parseInt(i.textContent) !== parseInt(e.target.value)) {
+          i.parentElement.style.border = `1px #222 solid`;
+        } else {
+          setTimeout(checkIfChanged, 300);
+        }
+      }
+      checkIfChanged();
+    }
+  });
+};
+
 const repartizareInit = (candidati, specializari) => {
   const denumiriSpecializari = Object.keys(specializari);
 
-  candidati.forEach((candidat) => {
-    denumiriSpecializari.forEach((specialitate) => {
-      //Pozitiile candidat[4] pana la candidat[candidat.length-1] reprezinta optiunile alese
-      for (let i = 4; i < candidat.length; i++) {
+  candidati.forEach((e) => {
+    e[2] = true;
+  });
+
+  for (let j = 0; j < candidati.length; j++) {
+    for (let x = 0; x < denumiriSpecializari.length; x++) {
+      for (let i = 4; i < candidati[j].length; i++) {
         if (
-          specializari[specialitate].cod === candidat[i] &&
-          specializari[specialitate].locuri >
-            specializari[specialitate].admisi.length
+          specializari[denumiriSpecializari[x]].cod === candidati[j][i] &&
+          specializari[denumiriSpecializari[x]].locuri >
+            specializari[denumiriSpecializari[x]].admisi.length &&
+          candidati[j][2]
         ) {
-          specializari[specialitate].admisi.push(candidat);
+          specializari[denumiriSpecializari[x]].admisi.push(candidati[j]);
+          candidati[j][2] = false;
           break;
         }
       }
-    });
-  });
+    }
+  }
 
   for (let i = 0; i < denumiriSpecializari.length; i++) {
     let elem = document.createElement('div');
@@ -24,11 +49,18 @@ const repartizareInit = (candidati, specializari) => {
     for (let i = 0; i < admisi.length; i++) {
       note.push(admisi[i][1]);
     }
+    let legitim = [];
+    for (let i = 0; i < admisi.length; i++) {
+      legitim.push(admisi[i][0]);
+    }
+
     let noteString = '';
     for (let i = 0; i < note.length; i++) {
-      noteString += `<div class="cell" >${
-        i + 1
-      }.&nbsp; <span class="nota" >${note[i].toFixed(2)}</span></div>`;
+      noteString += `<div class="cell"><span class="nrCrt">${
+        i + 1 < 10 ? `0${i + 1}` : i + 1
+      }.</span><span class="nota" >${
+        note[i] === 10 ? note[i].toFixed(1) : note[i].toFixed(2)
+      }</span><span class="nrLeg">${legitim[i]}</span></div>`;
     }
     elem.innerHTML = `<h1>${denumiriSpecializari[i].replace(
       /_/g,
