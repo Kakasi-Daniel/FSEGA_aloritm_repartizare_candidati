@@ -1,0 +1,30 @@
+* {
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+h1{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 27px;
+    font-weight: 300;
+}
+
+.nota {
+  font-weight: 400;
+}
+
+body {
+  background-color: #222;
+}
+
+.cell {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.cell:nth-child(odd){
+    background-color: #333;
+}
