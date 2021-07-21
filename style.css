@@ -113,3 +113,29 @@ h1 + .cell .nrLeg::after{
 .m{
   margin-bottom: 70px;
 }
+
+.spinner{
+  background-color: #fff;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin: auto;
+  position: relative;
+  animation: spin .5s infinite linear;
+  box-shadow: inset 45px 45px 0px #222,
+   inset -45px -45px 0px #222;
+
+}
+
+
+@keyframes spin {
+  0%{
+    transform: rotate(0);
+    
+  }
+  100%{
+    transform: rotate(360deg);
+    
+  }
+  
+}
